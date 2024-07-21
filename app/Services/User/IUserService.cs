@@ -7,5 +7,6 @@ namespace app.Services
     public interface IUserService
     {
         ActionResult<UserDto>? Info();
+        ActionResult<UserDto>? PublicProfile();
     }
 }

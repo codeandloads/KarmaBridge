@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using app.Dto;
 using app.Models;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +49,21 @@ namespace app.Services
                 CategoryId = job.CategoryModelId,
                 Type = job.type
             });
+        }
+
+        public IEnumerable<JobDto> SearchJobs(JobSearchQueryDto jobSearchQueryDto)
+        {
+            return ApplicationDbContext.jobs
+            .Include(job => job.Category)
+            .Select(job => new JobDto
+            {
+                Category = job.Category,
+                Title = job.Title,
+                ShortDescription = job.ShortDescription,
+                CategoryId = job.CategoryModelId,
+                Type = job.type
+            }).Where(job => job.Title.ToLower().Contains(jobSearchQueryDto.Title.ToLower()))
+            .ToList();
         }
     }
 }

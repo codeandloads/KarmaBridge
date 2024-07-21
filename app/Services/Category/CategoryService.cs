@@ -21,7 +21,6 @@ namespace app.Services
 
         }
 
-        // TODO: allow ADMIN to add multiple categories at once.
         public bool AddCategory(CategoryModel model)
         {
             var response = ApplicationDbContext.categories.Add(model).Entity;

@@ -11,7 +11,7 @@ function RootLayout() {
   return (
     <>
       <Header />
-      <div className="container m-w-2xl">
+      <div className="container">
         <Outlet />
         <Toaster />
       </div>

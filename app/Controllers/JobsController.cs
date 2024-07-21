@@ -1,5 +1,4 @@
 ﻿using app.Dto;
-using app.Models;
 using app.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +23,21 @@ namespace app.Controllers
         public IEnumerable<JobDto> Index()
         {
             return jobsService.GetJobs();
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<JobDto>> Search([FromQuery] JobSearchQueryDto jobSearchQueryDto)
+        {
+            if (string.IsNullOrWhiteSpace(jobSearchQueryDto.Title))
+            {
+                return BadRequest("Search parameter is invalid");
+            }
+            var jobs = jobsService.SearchJobs(jobSearchQueryDto);
+            if (jobs.Any())
+            {
+                return Ok(jobs);
+            }
+            return NoContent();
         }
 
         [HttpPost]

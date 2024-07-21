@@ -7,5 +7,6 @@ namespace app.Services
     {
         JobModel AddJob(JobDto jobDto);
         IEnumerable<JobDto> GetJobs();
+        IEnumerable<JobDto> SearchJobs(JobSearchQueryDto jobSearchQueryDto);
     }
 }

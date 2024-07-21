@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using app.Models;
 
 namespace app.Dto

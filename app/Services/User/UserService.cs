@@ -25,8 +25,8 @@ namespace app.Services
             .Where(x => x.Id == UserModelId).Select(x => new UserDto
             {
                 Email = x.Email!,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
+                FirstName = x.FirstName!,
+                LastName = x.LastName!,
                 ImageUrl = x.ImageUrl
             }).FirstOrDefault();
             if (user != null)
@@ -34,6 +34,17 @@ namespace app.Services
                 return user;
             }
             return null;
+        }
+
+        /// <summary>
+        /// This should allow users to view the default profile of the user.  
+        /// and by default, that means public profile.
+        /// </summary>
+        /// <returns></returns>
+        // TODO
+        public ActionResult<UserDto>? PublicProfile()
+        {
+            throw new NotImplementedException();
         }
     }
 }
