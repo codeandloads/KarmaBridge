@@ -1,0 +1,17 @@
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using app.Models;
+
+public class ApplicationDbContext : IdentityDbContext<UserModel>
+{
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
+        base(options)
+    {
+    }
+
+    public DbSet<JobModel> jobs { get; set; }
+    public DbSet<CategoryModel> categories { get; set; }
+    public DbSet<ServiceModel> services { get; set; } = default!;
+
+}
