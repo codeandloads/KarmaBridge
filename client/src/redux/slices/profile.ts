@@ -1,15 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
+import type { UserInfo } from "karmabridge-types";
 
-interface ProfileState {
-  imageUrl?: string;
-  FirstName: string;
-  LastName: string;
-  Email: string;
-}
-
-const initialState: ProfileState = {
+const initialState: UserInfo = {
   FirstName: "",
   LastName: "",
   Email: "",
@@ -19,7 +13,7 @@ export const profileSlice = createSlice({
   name: "profile",
   initialState,
   reducers: {
-    setInfo: (state, action: PayloadAction<ProfileState>) => {
+    setInfo: (state, action: PayloadAction<UserInfo>) => {
       state = action.payload;
     },
   },

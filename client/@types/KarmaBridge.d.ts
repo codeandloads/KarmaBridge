@@ -5,6 +5,24 @@ declare module "karmabridge-types" {
     jobs: [JOB] | null;
   }
 
+  export interface LOCATION {
+    id: number;
+    state: string;
+    city: string;
+    suburb: string;
+    street: string;
+    country: string;
+    PostCode: string;
+  }
+
+  export enum TYPES {
+    "FullTime" = 1,
+    "PartTime" = 2,
+    "Casual" = 3,
+    "Contract" = 4,
+    "SubContract" = 5,
+  }
+
   export interface JOB {
     id: string;
     title: string;
@@ -12,6 +30,20 @@ declare module "karmabridge-types" {
     longDescription: string;
     categoryId: number;
     category: CATEGORY;
-    type: string;
+    location: LOCATION;
+    type: TYPES;
+  }
+
+  export interface UserInfo {
+    imageUrl?: string;
+    FirstName: string;
+    LastName: string;
+    Email: string;
+  }
+
+  interface AuthInfo {
+    accessToken: string;
+    refreshToken: string;
+    expiresIn: number;
   }
 }

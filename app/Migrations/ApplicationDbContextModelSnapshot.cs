@@ -181,6 +181,12 @@ namespace app.Migrations
                     b.Property<int>("CategoryModelId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Keywords")
+                        .HasColumnType("text");
+
+                    b.Property<int>("LocationId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("LongDescription")
                         .HasColumnType("text");
 
@@ -192,11 +198,10 @@ namespace app.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("UserModelId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("type")
+                    b.Property<string>("UserModelId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -204,9 +209,46 @@ namespace app.Migrations
 
                     b.HasIndex("CategoryModelId");
 
+                    b.HasIndex("LocationId");
+
                     b.HasIndex("UserModelId");
 
                     b.ToTable("jobs");
+                });
+
+            modelBuilder.Entity("app.Models.LocationModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PostCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Street")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Suburb")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("locations");
                 });
 
             modelBuilder.Entity("app.Models.ServiceModel", b =>
@@ -381,6 +423,12 @@ namespace app.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("app.Models.LocationModel", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("app.Models.UserModel", null)
                         .WithMany("Jobs")
                         .HasForeignKey("UserModelId")
@@ -388,6 +436,8 @@ namespace app.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+
+                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("app.Models.ServiceModel", b =>

@@ -3,6 +3,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { FormError } from "./FormError";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const MInput = ({ field }: { field: FieldApi<any, any, any, any> }) => {
   return (
     <>

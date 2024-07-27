@@ -1,14 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
+import type { AuthInfo } from "karmabridge-types";
 
-interface AuthState {
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
-}
-
-const initialState: AuthState = {
+const initialState: AuthInfo = {
   accessToken: "",
   refreshToken: "",
   expiresIn: 0,
@@ -18,7 +13,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setAuth: (state, action: PayloadAction<AuthState>) => {
+    setAuth: (state, action: PayloadAction<AuthInfo>) => {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       state.expiresIn = action.payload.expiresIn;

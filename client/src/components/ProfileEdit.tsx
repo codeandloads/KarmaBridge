@@ -18,7 +18,6 @@ export function ProfileEdit() {
   const form = useForm({
     defaultValues: {
       email: "",
-      FirstName: "",
       MiddleName: "",
       LastName: "",
       UserName: "",
@@ -45,7 +44,9 @@ export function ProfileEdit() {
             <form.Field
               name="UserName"
               validators={{
-                onChange: z.string().min(8, "Username should be greater than 8 charcters."),
+                onChange: z
+                  .string()
+                  .min(8, "Username should be greater than 8 charcters."),
                 onChangeAsyncDebounceMs: 500,
               }}
               children={(field) => (
@@ -58,7 +59,9 @@ export function ProfileEdit() {
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
                   <div className="text-red-600 font-semibold text-xs mt-1 opacity-80">
-                    {field.state.meta.errors ? <em role="alert">{field.state.meta.errors.join(", ")}</em> : null}
+                    {field.state.meta.errors ? (
+                      <em role="alert">{field.state.meta.errors.join(", ")}</em>
+                    ) : null}
                   </div>
                 </>
               )}

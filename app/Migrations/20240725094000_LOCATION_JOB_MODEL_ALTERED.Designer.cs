@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace app.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240718053505_CHANGE")]
-    partial class CHANGE
+    [Migration("20240725094000_LOCATION_JOB_MODEL_ALTERED")]
+    partial class LOCATION_JOB_MODEL_ALTERED
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -103,12 +103,10 @@ namespace app.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
@@ -145,12 +143,10 @@ namespace app.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
                         .HasColumnType("text");
@@ -174,7 +170,7 @@ namespace app.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoryModel");
+                    b.ToTable("categories");
                 });
 
             modelBuilder.Entity("app.Models.JobModel", b =>
@@ -185,7 +181,88 @@ namespace app.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("CategoryModelId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Keywords")
+                        .HasColumnType("text");
+
+                    b.Property<int>("LocationId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LongDescription")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ShortDescription")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserModelId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryModelId");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("UserModelId");
+
+                    b.ToTable("jobs");
+                });
+
+            modelBuilder.Entity("app.Models.LocationModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PostCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Street")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Suburb")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("locations");
+                });
+
+            modelBuilder.Entity("app.Models.ServiceModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryModelId")
                         .HasColumnType("integer");
 
                     b.Property<string>("LongDescription")
@@ -200,6 +277,7 @@ namespace app.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("UserModelId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("type")
@@ -208,11 +286,9 @@ namespace app.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.HasIndex("UserModelId");
 
-                    b.ToTable("jobs");
+                    b.ToTable("services");
                 });
 
             modelBuilder.Entity("app.Models.UserModel", b =>
@@ -227,9 +303,6 @@ namespace app.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
-                    b.Property<string>("ConfirmPassword")
-                        .HasColumnType("text");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -238,11 +311,12 @@ namespace app.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
@@ -261,11 +335,6 @@ namespace app.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");
@@ -352,21 +421,47 @@ namespace app.Migrations
             modelBuilder.Entity("app.Models.JobModel", b =>
                 {
                     b.HasOne("app.Models.CategoryModel", "Category")
+                        .WithMany("Jobs")
+                        .HasForeignKey("CategoryModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("app.Models.LocationModel", "Location")
                         .WithMany()
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("app.Models.UserModel", null)
                         .WithMany("Jobs")
-                        .HasForeignKey("UserModelId");
+                        .HasForeignKey("UserModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
+
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("app.Models.ServiceModel", b =>
+                {
+                    b.HasOne("app.Models.UserModel", null)
+                        .WithMany("Services")
+                        .HasForeignKey("UserModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("app.Models.CategoryModel", b =>
+                {
+                    b.Navigation("Jobs");
                 });
 
             modelBuilder.Entity("app.Models.UserModel", b =>
                 {
                     b.Navigation("Jobs");
+
+                    b.Navigation("Services");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,32 +1,30 @@
 using app.Models;
 using app.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(config =>
 {
-    var policy = new AuthorizationPolicyBuilder()
-                     .RequireAuthenticatedUser()
-                     .Build();
-    config.Filters.Add(new AuthorizeFilter(policy));
+  var policy = new AuthorizationPolicyBuilder()
+                   .RequireAuthenticatedUser()
+                   .Build();
+  config.Filters.Add(new AuthorizeFilter(policy));
 });
 
 builder.Services.AddCors(options =>
       {
-          options.AddPolicy("AllowSpecificOrigins",
-              builder =>
-              {
-                  builder.WithOrigins(
-                      "http://localhost:3000"  // If you need to allow a local development server
-                  )
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-              });
+        options.AddPolicy("AllowSpecificOrigins",
+            builder =>
+            {
+              builder.WithOrigins(
+                    "http://localhost:3000"  // If you need to allow a local development server
+                )
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+            });
       });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { JOB } from "karmabridge-types";
+import { JOB, TYPES } from "karmabridge-types";
 import { Building2, HeartIcon, Layers2Icon, Send } from "lucide-react";
 
 export const JobItem = ({ job }: { job: JOB }) => {
@@ -56,7 +56,7 @@ function Category({ title }: { title: string }) {
   );
 }
 
-function Type({ type }: { type: string }) {
+function Type({ type }: { type: TYPES }) {
   return (
     <div className="flex flex-row gap-2 justify-normal items-center">
       <div className="text-sm">

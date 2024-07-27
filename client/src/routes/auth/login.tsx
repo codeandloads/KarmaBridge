@@ -12,14 +12,14 @@ import { zodValidator } from "@tanstack/zod-form-adapter";
 import { z } from "zod";
 import { FormError } from "@/components/FormError";
 import { setAuth } from "@/redux/slices/auth";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "@/redux/hooks/store";
 
 export const Route = createFileRoute("/auth/login")({
   component: Login,
 });
 
 function Login() {
-  const dispath = useDispatch();
+  const dispath = useAppDispatch();
   const LoginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data: AxiosResponse<LOGIN_RESPONSE>) => {
@@ -77,7 +77,10 @@ function Login() {
             <form.Field
               name="password"
               validators={{
-                onChange: z.string().min(8, "Minimum 8 and maximum 16 charcters long.").max(16),
+                onChange: z
+                  .string()
+                  .min(8, "Minimum 8 and maximum 16 charcters long.")
+                  .max(16),
                 onChangeAsyncDebounceMs: 500,
               }}
               children={(field) => (

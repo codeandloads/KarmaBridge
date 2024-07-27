@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics;
+using System.Security.Claims;
 using app.Dto;
 using app.Models;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,8 @@ namespace app.Services
         private readonly ApplicationDbContext ApplicationDbContext;
         private readonly IHttpContextAccessor httpContext;
 
-        public JobsService(ApplicationDbContext context, IHttpContextAccessor httpContext)
+        public JobsService(ApplicationDbContext context,
+            IHttpContextAccessor httpContext)
         {
             ApplicationDbContext = context;
             this.httpContext = httpContext;
@@ -30,7 +32,8 @@ namespace app.Services
                 Title = jobDto.Title,
                 ShortDescription = jobDto.ShortDescription,
                 LongDescription = jobDto.LongDescription,
-                type = jobDto.Type,
+                Type = jobDto.Type,
+                Location = jobDto.Location,
                 UserModelId = UserModelId
             };
             var job = ApplicationDbContext.jobs.Add(model).Entity;
@@ -47,23 +50,40 @@ namespace app.Services
                 Title = job.Title,
                 ShortDescription = job.ShortDescription,
                 CategoryId = job.CategoryModelId,
-                Type = job.type
+                Type = job.Type,
+                Location = job.Location
             });
         }
 
-        public IEnumerable<JobDto> SearchJobs(JobSearchQueryDto jobSearchQueryDto)
+        public IEnumerable<JobDto> SearchJobs(JobSearchQuery jobSearchQuery)
         {
-            return ApplicationDbContext.jobs
-            .Include(job => job.Category)
+            var query = ApplicationDbContext.jobs
             .Select(job => new JobDto
             {
                 Category = job.Category,
                 Title = job.Title,
                 ShortDescription = job.ShortDescription,
                 CategoryId = job.CategoryModelId,
-                Type = job.type
-            }).Where(job => job.Title.ToLower().Contains(jobSearchQueryDto.Title.ToLower()))
-            .ToList();
+                Type = job.Type,
+                Location = job.Location,
+            });
+
+            if (!string.IsNullOrWhiteSpace(jobSearchQuery.Title))
+            {
+                query = query.Where(job => job.Title.ToLower().Contains(jobSearchQuery.Title.ToLower()));
+            }
+            if (!string.IsNullOrWhiteSpace(jobSearchQuery.Query))
+            {
+                query = query.Where(job =>
+                job.Location.City == jobSearchQuery.Query
+               || job.Location.State == jobSearchQuery.Query ||
+               job.Location.State == jobSearchQuery.Query
+               || job.Location.PostCode == jobSearchQuery.Query ||
+               job.Location.Suburb == jobSearchQuery.Query
+                );
+            }
+            return [.. query];
         }
+
     }
 }

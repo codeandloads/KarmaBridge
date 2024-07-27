@@ -2,24 +2,31 @@ import { Link } from "@tanstack/react-router";
 import { Button } from "./ui/button";
 import { LogOut, MoonIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useDispatch } from "react-redux";
-import { useAuth } from "@/redux/hooks/auth";
 import { removeTokens } from "@/utils/token";
-import { removeAuth } from "@/redux/slices/auth";
+import { removeAuth, selectAccessToken } from "@/redux/slices/auth";
+import { ProfileInfo } from "@/queries/profile";
+import { useQuery } from "@tanstack/react-query";
+import { AvatarShimmer } from "./shimmers/avatar.shimmer";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks/store";
 
 export const Header = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { user } = useAuth();
+  const { data: info, isLoading } = useQuery({
+    queryKey: ["profile"],
+    queryFn: ProfileInfo,
+  });
 
   const handleLogout = () => {
     removeTokens();
     dispatch(removeAuth());
   };
 
+  console.log(useAppSelector(selectAccessToken));
+
   return (
     <>
-      <div className="p-3 h-18 bg-slate-300 dark:bg-slate-300 w-full fixed dark:text-white backdrop-blur-xl font-mono font-semibold m-auto top-0 left-0">
+      <div className="p-3 h-18 dark:bg-slate-700 border border-b-2 w-full fixed dark:text-white text-black backdrop-blur-xl font-mono font-semibold m-auto top-0 left-0">
         <div className="ml-10 m-w-lg flex gap-2 items-center justify-between">
           <div className="inline-flex gap-3">
             <Link to="/" className="[&.active]:font-bold">
@@ -28,35 +35,43 @@ export const Header = () => {
             <Link to="/about" className="[&.active]:font-bold">
               About
             </Link>
-            <Link to="/auth/login" className="[&.active]:font-bold">
-              Login
-            </Link>
-            <Link to="/auth/register" className="[&.active]:font-bold">
-              Register
-            </Link>
           </div>
-          <div className="inline-flex gap-3">
-            <div className="flex-1">
-              {user && user.Email ? (
+          <div className="inline-flex gap-3 items-center">
+            <div className="flex-1 inline-flex items-center">
+              {isLoading ? (
+                <AvatarShimmer />
+              ) : info?.data ? (
                 <div className="inline-flex gap-2">
                   <Avatar>
-                    <AvatarImage src={user.imageUrl} alt="pro_pic" />
+                    <AvatarImage src={info?.data.imageUrl} alt="pro_pic" />
                     <AvatarFallback>
-                      {user.FirstName.charAt(0)}
-                      {user.LastName.charAt(0)}
+                      {info?.data.firstName?.charAt(0)}
+                      {info?.data.lastName?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="">
-                    <Button size={"icon"} variant={"ghost"} onClick={handleLogout}>
+                    <Button
+                      size={"icon"}
+                      variant={"ghost"}
+                      onClick={handleLogout}
+                    >
                       <LogOut />
                     </Button>
                   </div>
                 </div>
-              ) : null}
+              ) : (
+                <div>
+                  <Link to="/auth/login" className="[&.active]:font-bold">
+                    Login
+                  </Link>
+                </div>
+              )}
             </div>
-            <Button size={"icon"} variant={"ghost"}>
-              <MoonIcon />
-            </Button>
+            <div>
+              <Button size={"icon"} variant={"ghost"}>
+                <MoonIcon />
+              </Button>
+            </div>
           </div>
         </div>
       </div>

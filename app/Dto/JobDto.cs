@@ -1,3 +1,4 @@
+using app.Enums;
 using app.Models;
 
 namespace app.Dto
@@ -9,6 +10,7 @@ namespace app.Dto
     public string? LongDescription { get; set; }
     public required int CategoryId { get; set; }
     public CategoryModel? Category { get; set; }
-    public required string Type { get; set; }
+    public required Types Type { get; set; } = Types.Casual;
+    public required LocationModel Location { get; set; }
   }
 }
