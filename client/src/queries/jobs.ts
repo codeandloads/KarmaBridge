@@ -4,6 +4,12 @@ export async function getJobs() {
   return await AUTH_AXIOS.get("Jobs/Index");
 }
 
-export async function searchJobs(queries: URLSearchParams | undefined) {
-  return await AUTH_AXIOS.get("Jobs/Search", { params: queries });
+export async function searchJobs({
+  title,
+  query,
+}: {
+  title: string | undefined;
+  query: string | undefined;
+}) {
+  return await AUTH_AXIOS.get(`Jobs/Search?Title=${title}&Query=${query}`);
 }

@@ -6,28 +6,39 @@ import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import { Spinner } from "../ui/spinner";
 import { Input } from "../ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchIcon } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import type { JOB } from "karmabridge-types";
-import { useAppSelector } from "@/redux/hooks/store";
-import { selectJobs } from "@/redux/slices/jobs";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks/store";
+import { selectJobs, setJobs } from "@/redux/slices/jobs";
 
 export const SearchBar = () => {
   const queryClient = useQueryClient();
+  const dispath = useAppDispatch();
 
-  const [mParams, setMParams] = useState<URLSearchParams | undefined>();
   const [shouldFetch, setShouldFetch] = useState<boolean>(false);
+  const [title, setTitle] = useState<string | undefined>();
+  const [query, setQuery] = useState<string | undefined>();
 
-  const { data: results } = useQuery({
-    queryKey: ["jobs", mParams],
-    queryFn: () => searchJobs(mParams),
+  const {
+    data: results,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["search_jobs", title, query],
+    queryFn: () => searchJobs({ title, query }),
     enabled: shouldFetch,
   });
 
-  const jobs = useAppSelector(selectJobs);
-
-  console.log("jobs from state", jobs);
+  useEffect(() => {
+    function SearchJobs(data: JOB[]) {
+      if (!error && data) {
+        dispath(setJobs(data));
+      }
+    }
+    SearchJobs(results?.data);
+  }, [dispath, error, results?.data]);
 
   const form = useForm({
     defaultValues: {
@@ -36,12 +47,10 @@ export const SearchBar = () => {
     },
     validatorAdapter: zodValidator(),
     onSubmit: async ({ value }) => {
-      const params = new URLSearchParams();
-      params.append("Title", value.Keyword);
-      params.append("Query", value.Query);
-      setMParams(params);
+      setTitle(value.Keyword);
+      setQuery(value.Query);
+      queryClient.invalidateQueries({ queryKey: ["search_jobs"] });
       setShouldFetch(true);
-      queryClient.invalidateQueries({ queryKey: ["jobs"] });
     },
   });
 
@@ -59,7 +68,7 @@ export const SearchBar = () => {
             <form.Field
               name="Keyword"
               validators={{
-                onChange: z.string().min(3, "Not a valid search keyword."),
+                // onChange: z.string().min(3, "Not a valid search keyword."),
                 onChangeAsyncDebounceMs: 500,
               }}
               children={(field) => (
@@ -106,21 +115,15 @@ export const SearchBar = () => {
                   type="submit"
                   disabled={!canSubmit}
                   variant={"secondary"}
+                  className="bg-indigo-500 text-white"
                 >
-                  {isSubmitting ? (
-                    <Spinner />
-                  ) : (
-                    <>
-                      <SearchIcon />
-                    </>
-                  )}
+                  {isSubmitting ? <Spinner /> : <>Find jobs</>}
                 </Button>
               )}
             />
           </div>
         </div>
       </form>
-      {results?.data.map((job: JOB) => <p>{job.title}</p>)}
     </div>
   );
 };

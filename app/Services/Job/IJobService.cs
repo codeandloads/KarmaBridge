@@ -5,7 +5,7 @@ namespace app.Services
 {
   public interface IJobService
   {
-    JobModel AddJob(JobDto jobDto);
+    JobDto AddJob(JobDto jobDto);
     IEnumerable<JobDto> GetJobs();
     IEnumerable<JobDto> SearchJobs(JobSearchQuery jobSearchQueryDto);
   }

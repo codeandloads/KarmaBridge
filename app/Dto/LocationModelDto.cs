@@ -1,6 +1,8 @@
-namespace app.Models;
+using app.Models;
 
-public class LocationModel
+namespace app.Dto;
+
+public class LocationModelDto
 {
     public int Id { get; set; }
     public string? Street { get; set; }
@@ -9,6 +11,4 @@ public class LocationModel
     public string? Country { get; set; } = "Australia";
     public required string Suburb { get; set; }
     public required string PostCode { get; set; }
-    public List<JobModel> Jobs { get; set; } = [];
-
 }

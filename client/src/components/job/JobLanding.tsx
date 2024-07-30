@@ -3,20 +3,29 @@ import { getJobs } from "@/queries/jobs";
 import { JobItem } from "@/components/job/JobItem";
 import { JOB } from "karmabridge-types";
 import { SearchBar } from "../search/search";
-import { useAppDispatch } from "@/redux/hooks/store";
-import { setJobs } from "@/redux/slices/jobs";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks/store";
+import { selectJobs, setJobs } from "@/redux/slices/jobs";
+import { useEffect, useState } from "react";
 
 export const JobLanding = () => {
   const dispath = useAppDispatch();
+  const [shouldFetch, setShouldFetch] = useState<boolean>(false);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["jobs"],
     queryFn: getJobs,
+    enabled: shouldFetch,
   });
 
-  if (!error && data?.data) {
-    dispath(setJobs(data.data[0]));
-  }
+  useEffect(() => {
+    setShouldFetch(true);
+
+    if (!error && data?.data) {
+      dispath(setJobs(data.data));
+    }
+  }, [data?.data, dispath, error]);
+
+  const jobs = useAppSelector(selectJobs);
 
   return (
     <>
@@ -28,7 +37,7 @@ export const JobLanding = () => {
           {isLoading ? (
             <>Loading...</>
           ) : (
-            data?.data?.map((job: JOB) => <JobItem key={job.id} job={job} />)
+            jobs && jobs?.map((job: JOB) => <JobItem key={job.id} job={job} />)
           )}
         </div>
       </div>

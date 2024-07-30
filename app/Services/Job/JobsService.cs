@@ -3,6 +3,7 @@ using System.Security.Claims;
 using app.Dto;
 using app.Models;
 using Microsoft.EntityFrameworkCore;
+using app.Utilities;
 
 namespace app.Services
 {
@@ -22,7 +23,7 @@ namespace app.Services
             this.httpContext = httpContext;
         }
 
-        public JobModel AddJob(JobDto jobDto)
+        public JobDto AddJob(JobDto jobDto)
         {
             var user = httpContext!.HttpContext!.User.Identity as ClaimsIdentity;
             var UserModelId = user!.FindFirst(ClaimTypes.NameIdentifier)!.Value;
@@ -33,25 +34,37 @@ namespace app.Services
                 ShortDescription = jobDto.ShortDescription,
                 LongDescription = jobDto.LongDescription,
                 Type = jobDto.Type,
-                Location = jobDto.Location,
+                Locations = jobDto.Locations.Select(
+                    location => ConvertTo(location)).ToList(),
                 UserModelId = UserModelId
             };
             var job = ApplicationDbContext.jobs.Add(model).Entity;
             ApplicationDbContext.SaveChanges();
-            return job;
+
+            return new JobDto
+            {
+                Category = job.Category,
+                Title = job.Title,
+                ShortDescription = job.ShortDescription,
+                LongDescription = job.LongDescription,
+                CategoryId = job.CategoryModelId,
+                Type = job.Type,
+                Locations = job.Locations.Select(location => ConvertToDto(location)).ToList(),
+            };
+
         }
 
         public IEnumerable<JobDto> GetJobs()
         {
             return ApplicationDbContext.jobs
-            .Include(job => job.Category).Select(job => new JobDto
+            .Select(job => new JobDto
             {
                 Category = job.Category,
                 Title = job.Title,
                 ShortDescription = job.ShortDescription,
                 CategoryId = job.CategoryModelId,
                 Type = job.Type,
-                Location = job.Location
+                Locations = job.Locations.Select(location => ConvertToDto(location)).ToList(),
             });
         }
 
@@ -65,7 +78,18 @@ namespace app.Services
                 ShortDescription = job.ShortDescription,
                 CategoryId = job.CategoryModelId,
                 Type = job.Type,
-                Location = job.Location,
+                Locations = job.Locations.Select(
+                    location =>
+                     new LocationModelDto
+                     {
+                         City = location.City,
+                         State = location.State,
+                         Street = location.Street,
+                         PostCode = location.PostCode,
+                         Suburb = location.Suburb
+                     }
+                    )
+                .ToList(),
             });
 
             if (!string.IsNullOrWhiteSpace(jobSearchQuery.Title))
@@ -75,14 +99,43 @@ namespace app.Services
             if (!string.IsNullOrWhiteSpace(jobSearchQuery.Query))
             {
                 query = query.Where(job =>
-                job.Location.City == jobSearchQuery.Query
-               || job.Location.State == jobSearchQuery.Query ||
-               job.Location.State == jobSearchQuery.Query
-               || job.Location.PostCode == jobSearchQuery.Query ||
-               job.Location.Suburb == jobSearchQuery.Query
+                    job.Locations.Any(location =>
+                location.City == jobSearchQuery.Query
+               || location.State == jobSearchQuery.Query ||
+               location.Street == jobSearchQuery.Query
+               || location.PostCode == jobSearchQuery.Query ||
+               location.Suburb == jobSearchQuery.Query
+                    )
                 );
             }
             return [.. query];
+        }
+
+        public static LocationModel ConvertTo(LocationModelDto location)
+        {
+            return new LocationModel
+            {
+                Id = location.Id,
+                City = location.City,
+                Country = location.Country,
+                PostCode = location.PostCode,
+                State = location.State,
+                Suburb = location.Suburb,
+                Street = location.Street
+            };
+        }
+        public static LocationModelDto ConvertToDto(LocationModel location)
+        {
+            return new LocationModelDto
+            {
+                Id = location.Id,
+                City = location.City,
+                Country = location.Country,
+                PostCode = location.PostCode,
+                State = location.State,
+                Suburb = location.Suburb,
+                Street = location.Street
+            };
         }
 
     }
