@@ -6,6 +6,7 @@ import { SearchBar } from "../search/search";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks/store";
 import { selectJobs, setJobs } from "@/redux/slices/jobs";
 import { useEffect, useState } from "react";
+import { Paginate } from "../pagination/paginate";
 
 export const JobLanding = () => {
   const dispath = useAppDispatch();
@@ -41,6 +42,7 @@ export const JobLanding = () => {
           )}
         </div>
       </div>
+      <Paginate />
     </>
   );
 };

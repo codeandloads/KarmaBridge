@@ -14,5 +14,6 @@ public class JobModel
     public required int CategoryModelId { get; set; }
     public required string UserModelId { get; set; }
     public string? Keywords { get; set; }
+    public string? CreatedAt { get; set; } = new DateTime().ToLongDateString();
     public required List<LocationModel> Locations { get; set; }
 }

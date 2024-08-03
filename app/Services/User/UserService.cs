@@ -41,7 +41,6 @@ namespace app.Services
         /// and by default, that means public profile.
         /// </summary>
         /// <returns></returns>
-        // TODO
         public ActionResult<UserDto>? PublicProfile()
         {
             throw new NotImplementedException();

@@ -4,6 +4,8 @@ using app.Dto;
 using app.Models;
 using Microsoft.EntityFrameworkCore;
 using app.Utilities;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace app.Services
 {
@@ -54,18 +56,30 @@ namespace app.Services
 
         }
 
-        public IEnumerable<JobDto> GetJobs()
+        public IEnumerable<JobDto> GetJobs(PaginatedQuery query)
         {
-            return ApplicationDbContext.jobs
-            .Select(job => new JobDto
+            var results = ApplicationDbContext.jobs
+            .paginatedFilter(query).sortingFilter(query).Select(job => new JobDto
             {
                 Category = job.Category,
                 Title = job.Title,
                 ShortDescription = job.ShortDescription,
                 CategoryId = job.CategoryModelId,
                 Type = job.Type,
-                Locations = job.Locations.Select(location => ConvertToDto(location)).ToList(),
+                Locations = job.Locations.Select(
+                    location =>
+                     new LocationModelDto
+                     {
+                         City = location.City,
+                         State = location.State,
+                         Street = location.Street,
+                         PostCode = location.PostCode,
+                         Suburb = location.Suburb
+                     }
+                    )
+                .ToList(),
             });
+            return results;
         }
 
         public IEnumerable<JobDto> SearchJobs(JobSearchQuery jobSearchQuery)
@@ -139,4 +153,6 @@ namespace app.Services
         }
 
     }
+
+
 }
