@@ -1,44 +1,29 @@
-import { useQuery } from "@tanstack/react-query";
-import { searchJobs } from "@/queries/jobs";
 import { zodValidator } from "@tanstack/zod-form-adapter";
 import { Button } from "../ui/button";
 import { useForm } from "@tanstack/react-form";
-import { z } from "zod";
 import { Spinner } from "../ui/spinner";
 import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
-import { SearchIcon } from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
-import type { JOB } from "karmabridge-types";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks/store";
-import { selectJobs, setJobs } from "@/redux/slices/jobs";
+import { useAppDispatch } from "@/redux/hooks/store";
+import { setJobs } from "@/redux/slices/jobs";
+import { useSearchJobsQuery } from "@/redux/services/jobs/jobs.service";
 
 export const SearchBar = () => {
-  const queryClient = useQueryClient();
   const dispath = useAppDispatch();
 
-  const [shouldFetch, setShouldFetch] = useState<boolean>(false);
   const [title, setTitle] = useState<string | undefined>();
   const [query, setQuery] = useState<string | undefined>();
 
-  const {
-    data: results,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: ["search_jobs", title, query],
-    queryFn: () => searchJobs({ title, query }),
-    enabled: shouldFetch,
+  const { error, data, isLoading } = useSearchJobsQuery({
+    Title: title,
+    Query: query,
   });
 
   useEffect(() => {
-    function SearchJobs(data: JOB[]) {
-      if (!error && data) {
-        dispath(setJobs(data));
-      }
+    if (!error && data?.jobs) {
+      dispath(setJobs(data));
     }
-    SearchJobs(results?.data);
-  }, [dispath, error, results?.data]);
+  }, [dispath, error, data]);
 
   const form = useForm({
     defaultValues: {
@@ -49,8 +34,6 @@ export const SearchBar = () => {
     onSubmit: async ({ value }) => {
       setTitle(value.Keyword);
       setQuery(value.Query);
-      queryClient.invalidateQueries({ queryKey: ["search_jobs"] });
-      setShouldFetch(true);
     },
   });
 

@@ -1,32 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
-import { getJobs } from "@/queries/jobs";
 import { JobItem } from "@/components/job/JobItem";
 import { JOB } from "karmabridge-types";
 import { SearchBar } from "../search/search";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks/store";
 import { selectJobs, setJobs } from "@/redux/slices/jobs";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Paginate } from "../pagination/paginate";
+import { useGetJobsQuery } from "@/redux/services/jobs/jobs.service";
 
 export const JobLanding = () => {
   const dispath = useAppDispatch();
-  const [shouldFetch, setShouldFetch] = useState<boolean>(false);
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["jobs"],
-    queryFn: getJobs,
-    enabled: shouldFetch,
-  });
+  const { isLoading, data, error } = useGetJobsQuery();
 
   useEffect(() => {
-    setShouldFetch(true);
-
-    if (!error && data?.data) {
-      dispath(setJobs(data.data));
+    if (!error && data?.jobs) {
+      dispath(setJobs(data));
     }
-  }, [data?.data, dispath, error]);
+  }, [data, dispath, error]);
 
-  const jobs = useAppSelector(selectJobs);
+  const { jobs, totalRows } = useAppSelector(selectJobs);
 
   return (
     <>
@@ -34,6 +25,7 @@ export const JobLanding = () => {
         <SearchBar />
       </div>
       <div className="grid grid-cols-2 gap-4">
+        {totalRows}
         <div className="mt-8">
           {isLoading ? (
             <>Loading...</>

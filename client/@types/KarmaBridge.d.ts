@@ -34,6 +34,11 @@ declare module "karmabridge-types" {
     type: TYPES;
   }
 
+  export interface JOBS_RESPONSE {
+    jobs: JOB[];
+    totalRows: number;
+  }
+
   export interface UserInfo {
     imageUrl?: string;
     FirstName: string;
