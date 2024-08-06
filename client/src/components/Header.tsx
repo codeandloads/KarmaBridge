@@ -3,11 +3,11 @@ import { Button } from "./ui/button";
 import { LogOut, MoonIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { removeTokens } from "@/utils/token";
-import { removeAuth, selectAccessToken } from "@/redux/slices/auth";
+import { removeAuth } from "@/redux/slices/auth";
 import { ProfileInfo } from "@/queries/profile";
 import { useQuery } from "@tanstack/react-query";
 import { AvatarShimmer } from "./shimmers/avatar.shimmer";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks/store";
+import { useAppDispatch } from "@/redux/hooks/store";
 
 export const Header = () => {
   const dispatch = useAppDispatch();
@@ -21,8 +21,6 @@ export const Header = () => {
     removeTokens();
     dispatch(removeAuth());
   };
-
-  console.log(useAppSelector(selectAccessToken));
 
   return (
     <>

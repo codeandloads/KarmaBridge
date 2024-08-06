@@ -20,19 +20,19 @@ namespace app.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IEnumerable<JobDto> Index([FromQuery] PaginatedQuery query)
+        public JobsResponse Index([FromQuery] PaginatedQuery query)
         {
             return jobsService.GetJobs(query);
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult<IEnumerable<JobDto>> Search([FromQuery] JobSearchQuery jobSearchQuery)
+        public ActionResult<JobsResponse> Search([FromQuery] JobSearchQuery jobSearchQuery)
         {
-            var jobs = jobsService.SearchJobs(jobSearchQuery);
-            if (jobs.Any())
+            var results = jobsService.SearchJobs(jobSearchQuery);
+            if (results.Jobs.Any())
             {
-                return Ok(jobs);
+                return Ok(results);
             }
             return NoContent();
         }

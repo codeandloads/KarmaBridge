@@ -56,8 +56,9 @@ namespace app.Services
 
         }
 
-        public IEnumerable<JobDto> GetJobs(PaginatedQuery query)
+        public JobsResponse GetJobs(PaginatedQuery query)
         {
+            var TotalRows = ApplicationDbContext.jobs.Count();
             var results = ApplicationDbContext.jobs
             .paginatedFilter(query).sortingFilter(query).Select(job => new JobDto
             {
@@ -79,11 +80,14 @@ namespace app.Services
                     )
                 .ToList(),
             });
-            return results;
+            return new JobsResponse { Jobs = results, TotalRows = TotalRows };
         }
 
-        public IEnumerable<JobDto> SearchJobs(JobSearchQuery jobSearchQuery)
+        public JobsResponse SearchJobs(JobSearchQuery jobSearchQuery)
         {
+            // TODO, if a user decided to search within a particular Category, I should
+            // return the total number of data for that category, and decide no. of pages
+            // accordingly
             var query = ApplicationDbContext.jobs
             .Select(job => new JobDto
             {
@@ -122,7 +126,7 @@ namespace app.Services
                     )
                 );
             }
-            return [.. query];
+            return new JobsResponse { Jobs = [.. query], TotalRows = query.Count() };
         }
 
         public static LocationModel ConvertTo(LocationModelDto location)

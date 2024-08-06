@@ -8,7 +8,7 @@ namespace app.Services
         public static IQueryable<T> sortingFilter<T>(this IQueryable<T> query, PaginatedQuery paginated)
         {
             var type = typeof(T);
-            var property = type.GetProperty(paginated.ColumnName!, System.Reflection.BindingFlags.IgnoreCase | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var property = type.GetProperty(paginated.Column!, System.Reflection.BindingFlags.IgnoreCase | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
             if (property != null)
             {
                 return query;

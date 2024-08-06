@@ -4,7 +4,7 @@ import type { JOBS_RESPONSE } from "karmabridge-types";
 export const jobsApi = createApi({
   reducerPath: "jobsApi",
   baseQuery: fetchBaseQuery({ baseUrl: "/api/Jobs/" }),
-  tagTypes: ["jobs"],
+  tagTypes: ["Jobs"],
   endpoints: (builder) => ({
     getJobs: builder.query<JOBS_RESPONSE, void>({
       query: () => "Index",
@@ -15,7 +15,6 @@ export const jobsApi = createApi({
     >({
       query: (body) => `Search/?Query=${body.Query}&Title=${body.Title}`,
     }),
-    // TODO: search jobs, should take in search paramerters and after a sucess response it should invalidate the cache i.e our tag wit "jobs" and return in transformed jobs just like in line 11.
   }),
 });
 

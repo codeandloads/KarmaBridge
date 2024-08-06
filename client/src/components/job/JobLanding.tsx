@@ -38,3 +38,5 @@ export const JobLanding = () => {
     </>
   );
 };
+
+// INFO: , fetch individual job based on the job ID : https://redux-toolkit.js.org/rtk-query/usage/queries

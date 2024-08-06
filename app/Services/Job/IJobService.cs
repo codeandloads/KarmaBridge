@@ -6,7 +6,7 @@ namespace app.Services
   public interface IJobService
   {
     JobDto AddJob(JobDto jobDto);
-    IEnumerable<JobDto> GetJobs(PaginatedQuery query);
-    IEnumerable<JobDto> SearchJobs(JobSearchQuery jobSearchQueryDto);
+    JobsResponse GetJobs(PaginatedQuery query);
+    JobsResponse SearchJobs(JobSearchQuery jobSearchQueryDto);
   }
 }
