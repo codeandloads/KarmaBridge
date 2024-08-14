@@ -9,14 +9,21 @@ import {
 } from "@/components/ui/card";
 import { JOB, TYPES } from "karmabridge-types";
 import { Building2, HeartIcon, Layers2Icon, Send } from "lucide-react";
+import { TypeMapper } from "./TypeMapper";
 
 export const JobItem = ({ job }: { job: JOB }) => {
   return (
-    <Card className="w-[350px] mb-3">
+    <Card className="mb-3 mt-4">
       <CardHeader>
         <CardTitle className="font-mono text-md">{job.title}</CardTitle>
-        <CardDescription>{job.shortDescription}</CardDescription>
-        <CardDescription>{job.longDescription}</CardDescription>
+        <CardDescription className="h-4">
+          {job.shortDescription}
+        </CardDescription>
+        <CardDescription>
+          {job.longDescription ? (
+            <>{job.longDescription.substring(0, 120)}...</>
+          ) : null}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form>
@@ -62,7 +69,9 @@ function Type({ type }: { type: TYPES }) {
       <div className="text-sm">
         <Building2 size={"1.2em"} />
       </div>
-      <div className="text-sm font-semibold">{type}</div>
+      <div className="text-sm font-semibold">
+        <TypeMapper type={type} />
+      </div>
     </div>
   );
 }

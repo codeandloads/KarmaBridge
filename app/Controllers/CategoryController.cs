@@ -19,7 +19,7 @@ namespace app.Controllers
     }
 
     [HttpGet]
-    public IEnumerable<CategoryModel> Index()
+    public IEnumerable<CategoryDto> Index()
     {
       return [];
     }

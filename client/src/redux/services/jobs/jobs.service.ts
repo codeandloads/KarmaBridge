@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { JOBS_RESPONSE } from "karmabridge-types";
+import type { JOB, JOBS_RESPONSE } from "karmabridge-types";
 
 export const jobsApi = createApi({
   reducerPath: "jobsApi",
@@ -8,6 +8,9 @@ export const jobsApi = createApi({
   endpoints: (builder) => ({
     getJobs: builder.query<JOBS_RESPONSE, void>({
       query: () => "Index",
+    }),
+    getJob: builder.query<JOB, { id: string }>({
+      query: (id) => `${id}`,
     }),
     searchJobs: builder.query<
       JOBS_RESPONSE,
@@ -18,4 +21,4 @@ export const jobsApi = createApi({
   }),
 });
 
-export const { useGetJobsQuery, useSearchJobsQuery } = jobsApi;
+export const { useGetJobsQuery, useSearchJobsQuery, useGetJobQuery } = jobsApi;

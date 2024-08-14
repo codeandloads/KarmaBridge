@@ -4,14 +4,13 @@ using app.Models;
 
 public class ApplicationDbContext : IdentityDbContext<UserModel>
 {
-  public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
-      base(options)
-  {
-  }
-
-  public DbSet<JobModel> jobs { get; set; }
-  public DbSet<CategoryModel> categories { get; set; }
-  public DbSet<ServiceModel> services { get; set; } = default!;
-  public DbSet<LocationModel> locations { get; set; } = default!;
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
+        base(options)
+    {
+    }
+    public DbSet<JobModel> jobs { get; set; }
+    public DbSet<CategoryModel> categories { get; set; }
+    public DbSet<ServiceModel> services { get; set; } = default!;
+    public DbSet<LocationModel> locations { get; set; } = default!;
 
 }

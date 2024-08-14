@@ -8,6 +8,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
+// TODO: work on pagination
 export const Paginate = () => {
   return (
     <div>

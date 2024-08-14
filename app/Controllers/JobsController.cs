@@ -27,6 +27,19 @@ namespace app.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        public ActionResult<JobDto> Get(Guid RefId)
+        {
+            var job = jobsService.GetJob(RefId);
+            if(job == null)
+            {
+                return NoContent();
+            }
+            return Ok(job);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        // INFO: Instead of a seperate / and /search route, can't I just use search route ?
         public ActionResult<JobsResponse> Search([FromQuery] JobSearchQuery jobSearchQuery)
         {
             var results = jobsService.SearchJobs(jobSearchQuery);

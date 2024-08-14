@@ -1,7 +1,7 @@
 ﻿using app.Dto;
 using System.Linq.Expressions;
 
-namespace app.Services
+namespace app.Extensions
 {
     public static class GenericFilters
     {
@@ -26,7 +26,7 @@ namespace app.Services
 
         public static IQueryable<T> paginatedFilter<T>(this IQueryable<T> query, PaginatedQuery paginated)
         {
-            return query.Skip((int)(paginated.Page! * paginated.DataPerPage!)).Take((int)(paginated.DataPerPage!));
+            return query.Skip((int)(paginated.Page! * paginated.DataPerPage!)).Take((int)paginated.DataPerPage!);
         }
     }
 }

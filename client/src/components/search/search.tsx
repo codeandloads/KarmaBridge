@@ -16,15 +16,15 @@ export const SearchBar = () => {
     Query: string | undefined;
   }>({ Query: undefined, Title: undefined });
 
-  const { data, error, isLoading } = useSearchJobsQuery(searchParmas);
+  const { data, error, isLoading, isFetching } =
+    useSearchJobsQuery(searchParmas);
 
   useEffect(() => {
-    if (!skip && !isLoading && !error && data) {
+    if (!skip && !isLoading && !error && data && !isFetching) {
       dispatch(setJobs(data));
-      //INFO: Reset skip to prevent unnecessary queries
       setSkip(true);
     }
-  }, [skip, isLoading, error, data, dispatch]);
+  }, [skip, isLoading, error, data, dispatch, isFetching]);
 
   const form = useForm({
     defaultValues: {
