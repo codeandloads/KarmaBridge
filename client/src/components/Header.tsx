@@ -24,10 +24,10 @@ export const Header = () => {
 
   return (
     <>
-      <div className="p-3 h-18 dark:bg-slate-700 border border-b-2 w-full fixed dark:text-white text-black backdrop-blur-xl font-mono font-semibold m-auto top-0 left-0">
+      <div className="p-3 h-18 dark:bg-slate-700 border border-b-2 w-full fixed dark:text-white text-black backdrop-blur-xl font-mono m-auto top-0 left-0">
         <div className="max-w-3xl flex gap-2 items-center justify-between flex-grow m-auto">
           <div className="inline-flex gap-5">
-            <Link to="/" className="[&.active]:font-bold">
+            <Link to="/" className="[&.active]:font-bold text-slate-800">
               Home
             </Link>
             <Link to="/about" className="[&.active]:font-bold">

@@ -12,5 +12,6 @@ namespace app.Dto
         public CategoryDto? Category { get; set; }
         public required Types Type { get; set; } = Types.Casual;
         public List<LocationModelDto> Locations { get; set; } = [];
+        public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

@@ -24,7 +24,7 @@ declare module "karmabridge-types" {
   }
 
   export interface JOB {
-    id: string;
+    refId: string;
     title: string;
     shortDescription: string;
     longDescription: string;
@@ -32,6 +32,7 @@ declare module "karmabridge-types" {
     category: CATEGORY;
     location: LOCATION;
     type: TYPES;
+    createdAt: Date;
   }
 
   export interface JOBS_RESPONSE {

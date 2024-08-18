@@ -1,5 +1,6 @@
 ﻿using app.Dto;
 using app.Models;
+using System.Diagnostics;
 
 namespace app.Extensions
 {
@@ -21,9 +22,11 @@ namespace app.Extensions
 
         public static CategoryDto ToCategoryDto(this JobModel job)
         {
-            return new CategoryDto
+                return job == null
+                    ? throw new ArgumentNullException(nameof(job))
+                : new CategoryDto
             {
-                Title = job.Category.Title,  
+                Title = job!.Category!.Title,
                 Id = job.Category.Id,
             };
         }

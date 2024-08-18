@@ -7,16 +7,27 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { JOB, TYPES } from "karmabridge-types";
-import { Building2, HeartIcon, Layers2Icon, Send } from "lucide-react";
-import { TypeMapper } from "./TypeMapper";
+import { JOB } from "karmabridge-types";
+import { BookmarkIcon, HeartIcon, Send } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Type } from "./Type";
+import { Category } from "./Category";
 
 export const JobItem = ({ job }: { job: JOB }) => {
   return (
     <Card className="mb-3 mt-4">
       <CardHeader>
-        <CardTitle className="font-mono text-md">{job.title}</CardTitle>
-        <CardDescription className="h-4">
+        <CardTitle className="font-mono text-md">
+          <Link
+            to="/job/$jobId"
+            params={{
+              jobId: job.refId,
+            }}
+          >
+            {job.title}
+          </Link>
+        </CardTitle>
+        <CardDescription className="h-5">
           {job.shortDescription}
         </CardDescription>
         <CardDescription>
@@ -39,39 +50,29 @@ export const JobItem = ({ job }: { job: JOB }) => {
         </form>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline" size={"icon"}>
-          <HeartIcon />
-        </Button>
-        <Button variant="outline" size={"default"}>
+        <div className="space-x-2">
+          <Button variant="outline" size={"icon"}>
+            <HeartIcon />
+          </Button>
+          <Button
+            variant="ghost"
+            aria-label="Save"
+            size={"icon"}
+            className="font-semibold shadow-md border-slate-400"
+          >
+            <BookmarkIcon />
+          </Button>
+        </div>
+        <Link
+          to={`/job/$jobId`}
+          params={{ jobId: job.refId }}
+          className="border border-slate-700 rounded-md p-2 shadow-md"
+        >
           <span className="inline-flex gap-1 justify-center items-center">
             Apply <Send size={"1.2em"} />
           </span>
-        </Button>
+        </Link>
       </CardFooter>
     </Card>
   );
 };
-
-function Category({ title }: { title: string }) {
-  return (
-    <div className="flex flex-row gap-2 justify-normal items-center">
-      <div className="text-sm">
-        <Layers2Icon size={"1.2em"} />
-      </div>
-      <div className="text-sm font-semibold">{title}</div>
-    </div>
-  );
-}
-
-function Type({ type }: { type: TYPES }) {
-  return (
-    <div className="flex flex-row gap-2 justify-normal items-center">
-      <div className="text-sm">
-        <Building2 size={"1.2em"} />
-      </div>
-      <div className="text-sm font-semibold">
-        <TypeMapper type={type} />
-      </div>
-    </div>
-  );
-}

@@ -10,7 +10,9 @@ export const jobsApi = createApi({
       query: () => "Index",
     }),
     getJob: builder.query<JOB, { id: string }>({
-      query: (id) => `${id}`,
+      query: ({ id }) => {
+        return `Get?refId=${id}`;
+      },
     }),
     searchJobs: builder.query<
       JOBS_RESPONSE,

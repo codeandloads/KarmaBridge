@@ -40,15 +40,17 @@ namespace app.Services
             };
             var job = ApplicationDbContext.jobs.Add(model).Entity;
             ApplicationDbContext.SaveChanges();
-
-            // TODO fix your fuck up, with the Category to CategoryDto converstion
-            // errro in reponse, null reference here, because there's not category object included inside our job object/entity, just categoryId.
+            /* TODO fix your fuck up, with the Category to CategoryDto converstion
+             error in reponse, null reference here, because there's not category object included inside our job object/entity, just categoryId.
+             since, populating/including category, isn't really necessary at least
+             for now, we gonna fix this in near future. */
             return new JobDto
             {
                 // Category = job.ToCategoryDto(),
                 Title = job.Title,
                 ShortDescription = job.ShortDescription,
                 LongDescription = job.LongDescription,
+                CreatedAt = job.CreatedAt,
                 CategoryId = job.CategoryModelId,
                 Type = job.Type,
                 Locations = job.Locations.Select(location => location.ToDto()).ToList(),
@@ -60,11 +62,17 @@ namespace app.Services
         {
             var TotalRows = ApplicationDbContext.jobs.Count();
             var results = ApplicationDbContext.jobs
-            .paginatedFilter(query).sortingFilter(query).Select(job => new JobDto
+            .paginatedFilter(query).sortingFilter(query)
+            .Include(job => job.Category)
+            .Include(job => job.Locations)
+            .Select(job => new JobDto
             {
+                RefId = job.RefId,
                 Category = job.ToCategoryDto(),
                 Title = job.Title,
                 ShortDescription = job.ShortDescription,
+                CreatedAt = job.CreatedAt,
+                LongDescription = job.LongDescription,
                 CategoryId = job.CategoryModelId,
                 Type = job.Type,
                 Locations = job.Locations.Select(
@@ -92,6 +100,7 @@ namespace app.Services
                 Title = job.Title,
                 ShortDescription = job.ShortDescription,
                 CategoryId = job.CategoryModelId,
+                CreatedAt = job.CreatedAt,
                 Type = job.Type,
                 Locations = job.Locations.Select(
                     location =>
@@ -140,11 +149,13 @@ namespace app.Services
             {
                 return new JobDto
                 {
-                    Category = new CategoryDto { Title = job.Category.Title, Id = job.Category.Id },
+                    Category = new CategoryDto { Title = job!.Category!.Title, Id = job.Category.Id },
                     Title = job.Title,
                     ShortDescription = job.ShortDescription,
+                    LongDescription = job.LongDescription,
                     CategoryId = job.CategoryModelId,
                     Type = job.Type,
+                    CreatedAt = job.CreatedAt,
                     Locations = job.Locations.Select(
                          location => location.ToDto()
                          )

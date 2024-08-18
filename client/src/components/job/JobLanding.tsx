@@ -6,7 +6,6 @@ import { selectJobs, setJobs } from "@/redux/slices/jobs";
 import { useEffect } from "react";
 import { Paginate } from "../pagination/paginate";
 import { useGetJobsQuery } from "@/redux/services/jobs/jobs.service";
-import { JobDetails } from "./JobDetails";
 
 export const JobLanding = () => {
   const dispath = useAppDispatch();
@@ -25,19 +24,14 @@ export const JobLanding = () => {
       <div className="w-full max-w-3xl items-center space-x-2 m-auto">
         <SearchBar />
       </div>
-      <div
-        className="max-w-3xl m-auto grid xl:grid-cols-3 sm:grid-cols-1 lg:grid-cols-2 grid-cols-2
-      gap-4"
-      >
+      <div className="max-w-3xl m-auto grid xl:grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 md:grid-cols-2 2xl:grid-cols-2 grid-col-2 gap-4">
         {isLoading ? (
           <>Loading...</>
         ) : (
-          jobs && jobs?.map((job: JOB) => <JobItem key={job.id} job={job} />)
+          jobs && jobs?.map((job: JOB) => <JobItem key={job.refId} job={job} />)
         )}
       </div>
       <Paginate />
     </>
   );
 };
-
-// INFO: , fetch individual job based on the job ID : https://redux-toolkit.js.org/rtk-query/usage/queries
