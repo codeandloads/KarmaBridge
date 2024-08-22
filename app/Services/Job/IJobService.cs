@@ -8,6 +8,7 @@ namespace app.Services
     JobDto AddJob(JobDto jobDto);
     JobsResponse GetJobs(PaginatedQuery query);
     JobDto? GetJob(Guid RefId);
+    bool SaveJob(int id);
     JobsResponse SearchJobs(JobSearchQuery jobSearchQueryDto);
   }
 }

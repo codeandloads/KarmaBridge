@@ -166,5 +166,17 @@ namespace app.Services
 
         }
 
+        public bool SaveJob(int id)
+        {
+            var user = httpContext!.HttpContext!.User.Identity as ClaimsIdentity;
+            var UserModelId = user!.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var joined = ApplicationDbContext.Saved.Add(new SavedJobsModel { JobModelId = id, UserModelId = UserModelId }).Entity;
+            ApplicationDbContext.SaveChanges();
+            if (joined != null)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

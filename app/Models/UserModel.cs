@@ -10,5 +10,6 @@ namespace app.Models
     public string? ImageUrl { get; set; }
     public List<JobModel>? Jobs { get; set; }
     public List<ServiceModel>? Services { get; set; }
+    public List<SavedJobsModel>? Saved { get; set; }
   }
 }

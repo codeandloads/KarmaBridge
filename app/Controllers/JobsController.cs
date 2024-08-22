@@ -61,5 +61,16 @@ namespace app.Controllers
             }
             return NoContent();
         }
+
+        [HttpPost]
+        public IActionResult SaveJob(int id)
+        {
+            var result = jobsService.SaveJob(id);
+            if (result)
+            {
+                return CreatedAtAction(nameof(SaveJob), result);
+            }
+            return NoContent();
+        }
     }
 }

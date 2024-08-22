@@ -14,13 +14,13 @@ namespace app.Services
 
         public IEnumerable<CategoryModel> GetAll()
         {
-            return ApplicationDbContext.categories.ToList();
+            return ApplicationDbContext.Categories.ToList();
 
         }
 
         public bool AddCategory(CategoryModel model)
         {
-            var response = ApplicationDbContext.categories.Add(model).Entity;
+            var response = ApplicationDbContext.Categories.Add(model).Entity;
             ApplicationDbContext.SaveChanges();
             if (response != null)
             {

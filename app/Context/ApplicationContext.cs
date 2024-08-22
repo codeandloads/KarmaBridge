@@ -9,8 +9,9 @@ public class ApplicationDbContext : IdentityDbContext<UserModel>
     {
     }
     public DbSet<JobModel> jobs { get; set; }
-    public DbSet<CategoryModel> categories { get; set; }
-    public DbSet<ServiceModel> services { get; set; } = default!;
-    public DbSet<LocationModel> locations { get; set; } = default!;
+    public DbSet<CategoryModel> Categories { get; set; }
+    public DbSet<ServiceModel> Services { get; set; } = default!;
+    public DbSet<LocationModel> Locations { get; set; } = default!;
+    public DbSet<SavedJobsModel> Saved { get; set; } = default!;
 
 }

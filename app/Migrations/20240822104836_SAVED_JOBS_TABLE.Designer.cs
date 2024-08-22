@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace app.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240822104836_SAVED_JOBS_TABLE")]
+    partial class SAVED_JOBS_TABLE
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,7 +185,7 @@ namespace app.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("categories");
                 });
 
             modelBuilder.Entity("app.Models.JobModel", b =>
@@ -264,7 +267,7 @@ namespace app.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations");
+                    b.ToTable("locations");
                 });
 
             modelBuilder.Entity("app.Models.SavedJobsModel", b =>
@@ -279,14 +282,13 @@ namespace app.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("UserModelId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserModelId");
 
-                    b.ToTable("Saved");
+                    b.ToTable("saved");
                 });
 
             modelBuilder.Entity("app.Models.ServiceModel", b =>
@@ -323,7 +325,7 @@ namespace app.Migrations
 
                     b.HasIndex("UserModelId");
 
-                    b.ToTable("Services");
+                    b.ToTable("services");
                 });
 
             modelBuilder.Entity("app.Models.UserModel", b =>
@@ -488,10 +490,8 @@ namespace app.Migrations
             modelBuilder.Entity("app.Models.SavedJobsModel", b =>
                 {
                     b.HasOne("app.Models.UserModel", null)
-                        .WithMany("Saved")
-                        .HasForeignKey("UserModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("saved")
+                        .HasForeignKey("UserModelId");
                 });
 
             modelBuilder.Entity("app.Models.ServiceModel", b =>
@@ -512,9 +512,9 @@ namespace app.Migrations
                 {
                     b.Navigation("Jobs");
 
-                    b.Navigation("Saved");
-
                     b.Navigation("Services");
+
+                    b.Navigation("saved");
                 });
 #pragma warning restore 612, 618
         }

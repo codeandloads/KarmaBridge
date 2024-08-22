@@ -35,19 +35,19 @@ namespace app.Services
                 type = serviceDto.Type,
                 UserModelId = UserModelId
             };
-            var service = await ApplicationDbContext.services.AddAsync(model);
+            var service = await ApplicationDbContext.Services.AddAsync(model);
             await ApplicationDbContext.SaveChangesAsync();
             return service.Entity;
         }
 
         public IEnumerable<ServiceModel> GetServices()
         {
-            return ApplicationDbContext.services.ToList();
+            return ApplicationDbContext.Services.ToList();
         }
 
         public async Task<ServiceModel?> GetService(int id)
         {
-            var service = await ApplicationDbContext.services.FindAsync(id);
+            var service = await ApplicationDbContext.Services.FindAsync(id);
             if(service == null)
             {
                 return null;
