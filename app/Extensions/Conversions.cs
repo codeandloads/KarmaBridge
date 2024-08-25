@@ -51,5 +51,39 @@ namespace app.Extensions
                 Id = category.Id,
             };
         }
+
+        public static SavedJobsDto ToDto(this SavedJobsModel savedJobsModel)
+        {
+            return new SavedJobsDto
+            {
+                UserModelId = savedJobsModel.UserModelId,
+                JobModelId = savedJobsModel.JobModelId,
+            };
+        }
+
+        public static JobDto ConvertToJobDto(this SavedJobsModel savedJobsModel)
+        {
+            return new JobDto
+            {
+                Id = savedJobsModel!.Job!.Id,
+                Title = savedJobsModel!.Job!.Title,
+                RefId = savedJobsModel!.Job!.RefId,
+                Category = savedJobsModel!.Job!.Category!.ToDto(),
+                CategoryId = savedJobsModel!.Job!.CategoryModelId,
+                Type = savedJobsModel!.Job!.Type,
+                ShortDescription = savedJobsModel!.Job!.ShortDescription,
+                LongDescription = savedJobsModel!.Job!.LongDescription,
+            };
+        }
+
+        public static UserDto ToDto(this UserModel x)
+        {
+            return new UserDto
+            {
+                Email = x.Email!,
+                FirstName = x.FirstName!,
+                LastName = x.LastName!,
+            };
+        }
     }
 }

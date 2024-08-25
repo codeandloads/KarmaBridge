@@ -1,10 +1,12 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using app.Enums;
+using app.Models;
 
 namespace app.Dto
 {
     public class JobDto
     {
+        public int Id { get; set; }
         public required string Title { get; set; }
         public Guid? RefId { get; set; } = Guid.NewGuid();
         public required string ShortDescription { get; set; }

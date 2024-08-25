@@ -20,7 +20,7 @@ namespace app.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public JobsResponse Index([FromQuery] PaginatedQuery query)
+        public JobsResponse<JobDto> Index([FromQuery] PaginatedQuery query)
         {
             return jobsService.GetJobs(query);
         }
@@ -30,7 +30,7 @@ namespace app.Controllers
         public ActionResult<JobDto> Get(Guid RefId)
         {
             var job = jobsService.GetJob(RefId);
-            if(job == null)
+            if (job == null)
             {
                 return NoContent();
             }
@@ -40,7 +40,7 @@ namespace app.Controllers
         [HttpGet]
         [AllowAnonymous]
         // INFO: Instead of a seperate / and /search route, can't I just use search route ?
-        public ActionResult<JobsResponse> Search([FromQuery] JobSearchQuery jobSearchQuery)
+        public ActionResult<JobsResponse<JobDto>> Search([FromQuery] JobSearchQuery jobSearchQuery)
         {
             var results = jobsService.SearchJobs(jobSearchQuery);
             if (results.Jobs.Any())
@@ -62,7 +62,7 @@ namespace app.Controllers
             return NoContent();
         }
 
-        [HttpPost]
+        [HttpPut]
         public IActionResult SaveJob(int id)
         {
             var result = jobsService.SaveJob(id);
@@ -70,7 +70,17 @@ namespace app.Controllers
             {
                 return CreatedAtAction(nameof(SaveJob), result);
             }
-            return NoContent();
+            else
+            {
+                return NoContent();
+            }
+        }
+
+        [HttpGet]
+        public JobsResponse<SavedJobsDto> SavedJobs()
+        {
+            var results = jobsService.SavedJobs();
+            return results;
         }
     }
 }

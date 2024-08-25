@@ -23,7 +23,8 @@ export const JobDetail = ({ job }: { job: JOB }) => {
       <Card className="min-w-full">
         <CardHeader>
           <CardTitle className="inline-flex items-center gap-1 mb-3">
-            {/* TODO: pop from the navigation statck, that way a user is redirected back where he/she came from. i.e navigation.pop()  */}
+            {/* TODO: pop from the navigation statck, that way a user is 
+            redirected back where he/she came from. i.e navigation.pop()  */}
             <Link to="/">
               <ArrowLeft />
             </Link>
@@ -35,6 +36,7 @@ export const JobDetail = ({ job }: { job: JOB }) => {
             </span>
             <Category title={job.category.title} />
             <div className="mb-4">
+              {" "}
               <Type type={job.type} />
             </div>
           </div>

@@ -25,7 +25,6 @@ namespace app.Services
 
         public JobDto AddJob(JobDto jobDto)
         {
-            // TODO: fix DateTime error in index route
             var user = httpContext!.HttpContext!.User.Identity as ClaimsIdentity;
             var UserModelId = user!.FindFirst(ClaimTypes.NameIdentifier)!.Value;
             var model = new JobModel
@@ -60,7 +59,7 @@ namespace app.Services
 
         }
 
-        public JobsResponse GetJobs(PaginatedQuery query)
+        public JobsResponse<JobDto> GetJobs(PaginatedQuery query)
         {
             var TotalRows = ApplicationDbContext.jobs.Count();
             var results = ApplicationDbContext.jobs
@@ -90,10 +89,10 @@ namespace app.Services
                     )
                 .ToList(),
             });
-            return new JobsResponse { Jobs = results, TotalRows = TotalRows };
+            return new JobsResponse<JobDto> { Jobs = results, TotalRows = TotalRows };
         }
 
-        public JobsResponse SearchJobs(JobSearchQuery jobSearchQuery)
+        public JobsResponse<JobDto> SearchJobs(JobSearchQuery jobSearchQuery)
         {
             var query = ApplicationDbContext.jobs
             .Select(job => new JobDto
@@ -134,7 +133,7 @@ namespace app.Services
                     )
                 );
             }
-            return new JobsResponse { Jobs = [.. query], TotalRows = query.Count() };
+            return new JobsResponse<JobDto> { Jobs = [.. query], TotalRows = query.Count() };
         }
 
         public JobDto? GetJob(Guid RefId)
@@ -172,13 +171,53 @@ namespace app.Services
         {
             var user = httpContext!.HttpContext!.User.Identity as ClaimsIdentity;
             var UserModelId = user!.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            var joined = ApplicationDbContext.Saved.Add(new SavedJobsModel { JobModelId = id, UserModelId = UserModelId }).Entity;
-            ApplicationDbContext.SaveChanges();
-            if (joined != null)
+            var exists = ApplicationDbContext.Saved.FirstOrDefault(saved => saved.JobModelId == id);
+            if (exists != null)
             {
+                // delete the link    
+                var deleted = ApplicationDbContext.Saved.Remove(exists);
+                ApplicationDbContext.SaveChanges();
+                if (deleted != null)
+                {
+                    return true;
+                }
                 return false;
             }
-            return true;
+            else
+            {
+                var joined = ApplicationDbContext.Saved.Add(
+                    new SavedJobsModel { JobModelId = id, UserModelId = UserModelId })
+                    .Entity;
+                ApplicationDbContext.SaveChanges();
+                if (joined != null)
+                {
+                    return false;
+                }
+
+            }
+            return false;
+        }
+
+        public JobsResponse<SavedJobsDto> SavedJobs()
+        {
+            // TODO: fix this please, although the query is working, the navigation
+            // prop is not
+            // select s."id", s."jobmodelid", s."usermodelid", j."id", j."categorymodelid", j."createdat", j."keywords", j."lastupdated", j."longdescription", j."refid", j."shortdescription", j."title", j."type", j."usermodelid"
+            //       from "saved" as s
+            //       where s."usermodelid" = '883fafbc-dd2d-4b97-a56a-15d7db484d6c';
+            //       inner join jobs as j on s."jobmodelid" = j."id"
+            var user = httpContext!.HttpContext!.User.Identity as ClaimsIdentity;
+            var UserModelId = user!.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var jobs = ApplicationDbContext.Saved
+            .Include(saved => saved.Job)
+            .Where(saved => saved.UserModelId == UserModelId)
+            .Select(saved => saved.ToDto());
+            var count = jobs.Count();
+            return new JobsResponse<SavedJobsDto>
+            {
+                TotalRows = count,
+                Jobs = jobs
+            };
         }
     }
 }
