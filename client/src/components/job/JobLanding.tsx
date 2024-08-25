@@ -24,7 +24,10 @@ export const JobLanding = () => {
       <div className="w-full max-w-3xl items-center space-x-2 m-auto">
         <SearchBar />
       </div>
-      <div className="max-w-3xl m-auto grid xl:grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 md:grid-cols-2 2xl:grid-cols-2 grid-col-2 gap-4">
+      <div
+        className="max-w-3xl m-auto grid xl:grid-cols-2 sm:grid-cols-1 
+      lg:grid-cols-2 md:grid-cols-2 2xl:grid-cols-2 grid-col-2 gap-4"
+      >
         {isLoading ? (
           <>Loading...</>
         ) : (

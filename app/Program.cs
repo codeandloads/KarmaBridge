@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
             builder =>
             {
               builder.WithOrigins(
-                    "http://localhost:3000"  // If you need to allow a local development server
+                    "http://localhost:5173"  // If you need to allow a local development server
                 )
                 .AllowAnyHeader()
                 .AllowAnyMethod();
@@ -51,7 +51,8 @@ if (!app.Environment.IsDevelopment())
 
 app.MapIdentityApi<UserModel>();
 
-app.UseHttpsRedirection();
+// INFO: do not want forced https in development.
+// app.UseHttpsRedirection();
 
 app.UseRouting();
 

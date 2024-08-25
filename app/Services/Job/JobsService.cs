@@ -25,6 +25,7 @@ namespace app.Services
 
         public JobDto AddJob(JobDto jobDto)
         {
+            // TODO: fix DateTime error in index route
             var user = httpContext!.HttpContext!.User.Identity as ClaimsIdentity;
             var UserModelId = user!.FindFirst(ClaimTypes.NameIdentifier)!.Value;
             var model = new JobModel
@@ -34,9 +35,10 @@ namespace app.Services
                 ShortDescription = jobDto.ShortDescription,
                 LongDescription = jobDto.LongDescription,
                 Type = jobDto.Type,
-                Locations = jobDto.Locations.Select(
+                Locations = jobDto.Locations!.Select(
                     location => location.ToModel()).ToList(),
-                UserModelId = UserModelId
+                UserModelId = UserModelId,
+                CreatedAt = DateTime.UtcNow
             };
             var job = ApplicationDbContext.jobs.Add(model).Entity;
             ApplicationDbContext.SaveChanges();
@@ -71,9 +73,9 @@ namespace app.Services
                 Category = job.ToCategoryDto(),
                 Title = job.Title,
                 ShortDescription = job.ShortDescription,
-                CreatedAt = job.CreatedAt,
                 LongDescription = job.LongDescription,
                 CategoryId = job.CategoryModelId,
+                CreatedAt = job.CreatedAt,
                 Type = job.Type,
                 Locations = job.Locations.Select(
                     location =>
@@ -96,7 +98,7 @@ namespace app.Services
             var query = ApplicationDbContext.jobs
             .Select(job => new JobDto
             {
-                Category = job.ToCategoryDto(),
+                Category = job.Category!.ToDto(),
                 Title = job.Title,
                 ShortDescription = job.ShortDescription,
                 CategoryId = job.CategoryModelId,
@@ -123,7 +125,7 @@ namespace app.Services
             if (!string.IsNullOrWhiteSpace(jobSearchQuery.Query))
             {
                 query = query.Where(job =>
-                    job.Locations.Any(location =>
+                    job.Locations!.Any(location =>
                 location.City == jobSearchQuery.Query
                || location.State == jobSearchQuery.Query ||
                location.Street == jobSearchQuery.Query

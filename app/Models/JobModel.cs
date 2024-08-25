@@ -1,5 +1,6 @@
 using app.Enums;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace app.Models;
 
@@ -15,7 +16,9 @@ public class JobModel
     public required int CategoryModelId { get; set; }
     public required string UserModelId { get; set; }
     public string? Keywords { get; set; }
-    [DefaultValue("NOW()")]
-    public DateTime? CreatedAt { get; set; } 
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public DateTime CreatedAt { get; set; }
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    public DateTime LastUpdated { get; set; }
     public required List<LocationModel> Locations { get; set; }
 }

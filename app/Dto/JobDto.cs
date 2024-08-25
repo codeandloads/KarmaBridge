@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using app.Enums;
 
 namespace app.Dto
@@ -11,7 +12,8 @@ namespace app.Dto
         public required int CategoryId { get; set; }
         public CategoryDto? Category { get; set; }
         public required Types Type { get; set; } = Types.Casual;
-        public List<LocationModelDto> Locations { get; set; } = [];
-        public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+        public List<LocationModelDto>? Locations { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime? CreatedAt { get; set; }
     }
 }
