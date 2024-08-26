@@ -73,19 +73,12 @@ namespace app.Services
                 Title = job.Title,
                 ShortDescription = job.ShortDescription,
                 LongDescription = job.LongDescription,
+                Author = job.Author!.ToDto(),
                 CategoryId = job.CategoryModelId,
                 CreatedAt = job.CreatedAt,
                 Type = job.Type,
                 Locations = job.Locations.Select(
-                    location =>
-                     new LocationModelDto
-                     {
-                         City = location.City,
-                         State = location.State,
-                         Street = location.Street,
-                         PostCode = location.PostCode,
-                         Suburb = location.Suburb
-                     }
+                    location => location.ToDto()
                     )
                 .ToList(),
             });
@@ -104,15 +97,7 @@ namespace app.Services
                 CreatedAt = job.CreatedAt,
                 Type = job.Type,
                 Locations = job.Locations.Select(
-                    location =>
-                     new LocationModelDto
-                     {
-                         City = location.City,
-                         State = location.State,
-                         Street = location.Street,
-                         PostCode = location.PostCode,
-                         Suburb = location.Suburb
-                     }
+                    location => location.ToDto()
                     )
                 .ToList(),
             });
@@ -200,22 +185,19 @@ namespace app.Services
 
         public JobsResponse<SavedJobsDto> SavedJobs()
         {
-            // TODO: fix this please, although the query is working, the navigation
+            // DONE: fix this please, although the query is working, the navigation
             // prop is not
-            // select s."id", s."jobmodelid", s."usermodelid", j."id", j."categorymodelid", j."createdat", j."keywords", j."lastupdated", j."longdescription", j."refid", j."shortdescription", j."title", j."type", j."usermodelid"
-            //       from "saved" as s
-            //       where s."usermodelid" = '883fafbc-dd2d-4b97-a56a-15d7db484d6c';
-            //       inner join jobs as j on s."jobmodelid" = j."id"
             var user = httpContext!.HttpContext!.User.Identity as ClaimsIdentity;
             var UserModelId = user!.FindFirst(ClaimTypes.NameIdentifier)!.Value;
             var jobs = ApplicationDbContext.Saved
             .Include(saved => saved.Job)
             .Where(saved => saved.UserModelId == UserModelId)
+            .ToList()
             .Select(saved => saved.ToDto());
             var count = jobs.Count();
             return new JobsResponse<SavedJobsDto>
             {
-                TotalRows = count,
+                TotalRows = 4,
                 Jobs = jobs
             };
         }

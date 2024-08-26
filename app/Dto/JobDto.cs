@@ -14,6 +14,7 @@ namespace app.Dto
         public required int CategoryId { get; set; }
         public CategoryDto? Category { get; set; }
         public required Types Type { get; set; } = Types.Casual;
+        public UserDto? Author { get; set; }
         public List<LocationModelDto>? Locations { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime? CreatedAt { get; set; }

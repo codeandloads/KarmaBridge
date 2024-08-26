@@ -58,31 +58,31 @@ namespace app.Extensions
             {
                 UserModelId = savedJobsModel.UserModelId,
                 JobModelId = savedJobsModel.JobModelId,
+                Job = savedJobsModel.Job!.ToDto()
             };
         }
-
-        public static JobDto ConvertToJobDto(this SavedJobsModel savedJobsModel)
-        {
-            return new JobDto
-            {
-                Id = savedJobsModel!.Job!.Id,
-                Title = savedJobsModel!.Job!.Title,
-                RefId = savedJobsModel!.Job!.RefId,
-                Category = savedJobsModel!.Job!.Category!.ToDto(),
-                CategoryId = savedJobsModel!.Job!.CategoryModelId,
-                Type = savedJobsModel!.Job!.Type,
-                ShortDescription = savedJobsModel!.Job!.ShortDescription,
-                LongDescription = savedJobsModel!.Job!.LongDescription,
-            };
-        }
-
-        public static UserDto ToDto(this UserModel x)
+        public static UserDto ToDto(this UserModel userModel)
         {
             return new UserDto
             {
-                Email = x.Email!,
-                FirstName = x.FirstName!,
-                LastName = x.LastName!,
+                Id = userModel.Id,
+                Email = userModel.Email!,
+                FirstName = userModel.FirstName!,
+                LastName = userModel.LastName!,
+            };
+        }
+
+
+        public static JobDto ToDto(this JobModel job)
+        {
+            return new JobDto
+            {
+                Title = job.Title,
+                Id = job.Id,
+                ShortDescription = job.ShortDescription,
+                CategoryId = job.CategoryModelId,
+                CreatedAt = job.CreatedAt,
+                Type = job.Type
             };
         }
     }

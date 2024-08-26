@@ -15,6 +15,7 @@ public class JobModel
     public CategoryModel? Category { get; set; }
     public required int CategoryModelId { get; set; }
     public required string UserModelId { get; set; }
+    public UserModel? Author { get; set; }
     public string? Keywords { get; set; }
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public DateTime CreatedAt { get; set; }

@@ -15,6 +15,13 @@ declare module "karmabridge-types" {
     PostCode: string;
   }
 
+  export interface AUTHOR {
+    id: string;
+    firstName: string;
+    lastName: string;
+    image?: string;
+  }
+
   export enum TYPES {
     "FullTime" = 1,
     "PartTime" = 2,
@@ -31,6 +38,7 @@ declare module "karmabridge-types" {
     categoryId: number;
     category: CATEGORY;
     location: LOCATION;
+    author: AUTHOR;
     type: TYPES;
     createdAt: Date;
   }

@@ -12,6 +12,7 @@ import { BookmarkIcon, HeartIcon, Send } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Type } from "./Type";
 import { Category } from "./Category";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export const JobItem = ({ job }: { job: JOB }) => {
   return (
@@ -27,6 +28,24 @@ export const JobItem = ({ job }: { job: JOB }) => {
             {job.title}
           </Link>
         </CardTitle>
+        <div className="inline-flex gap-1 items-center">
+          <Avatar className="text-sm">
+            <AvatarImage src={job.author.image} alt="pro_pic" />
+            <AvatarFallback>
+              {job.author.firstName?.charAt(0)}
+              {job.author.lastName?.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+          <div
+            className="text-pretty font-semibold text-slate-700 
+          text-xs"
+          >
+            <span className="inline-flex flex-col items-start">
+              {job.author.firstName} {job.author.lastName}
+              <span className="text-slate-400">HR at .Org</span>
+            </span>
+          </div>
+        </div>
         <CardDescription className="h-5">
           {job.shortDescription}
         </CardDescription>
