@@ -30,13 +30,23 @@ namespace app.Controllers
     }
 
     [HttpGet]
-    [AllowAnonymous]
     public ActionResult<UserDto> PublicProfile()
     {
       var response = IUserService.Info();
       if (response != null)
       {
         return response;
+      }
+      return NoContent();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateProfilePic(IFormFile file)
+    {
+      var response = await IUserService.UpdateProfilePic(file);
+      if (response != null)
+      {
+        return Ok(response);
       }
       return NoContent();
     }

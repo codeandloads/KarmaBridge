@@ -60,6 +60,8 @@ app.UseCors("AllowSpecificOrigins");
 
 app.UseAuthorization();
 
+app.UseStaticFiles();
+
 app.MapControllers();
 
 app.UsePathBase("/api");

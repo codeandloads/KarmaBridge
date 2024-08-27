@@ -19,7 +19,7 @@ declare module "karmabridge-types" {
     id: string;
     firstName: string;
     lastName: string;
-    image?: string;
+    imageUrl?: string;
   }
 
   export enum TYPES {
@@ -37,7 +37,7 @@ declare module "karmabridge-types" {
     longDescription: string;
     categoryId: number;
     category: CATEGORY;
-    location: LOCATION;
+    locations: LOCATION[];
     author: AUTHOR;
     type: TYPES;
     createdAt: Date;

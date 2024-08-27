@@ -8,5 +8,7 @@ namespace app.Services
     {
         ActionResult<UserDto>? Info();
         ActionResult<UserDto>? PublicProfile();
+        ActionResult<UserDto> UpdateProfile();
+        Task<string> UpdateProfilePic(IFormFile file);
     }
 }

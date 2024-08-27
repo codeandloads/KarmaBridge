@@ -12,7 +12,8 @@ import { BookmarkIcon, HeartIcon, Send } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Type } from "./Type";
 import { Category } from "./Category";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import MAvatar from "../MAvatar";
+import { MLocations } from "../Locations";
 
 export const JobItem = ({ job }: { job: JOB }) => {
   return (
@@ -28,24 +29,6 @@ export const JobItem = ({ job }: { job: JOB }) => {
             {job.title}
           </Link>
         </CardTitle>
-        <div className="inline-flex gap-1 items-center">
-          <Avatar className="text-sm">
-            <AvatarImage src={job.author.image} alt="pro_pic" />
-            <AvatarFallback>
-              {job.author.firstName?.charAt(0)}
-              {job.author.lastName?.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-          <div
-            className="text-pretty font-semibold text-slate-700 
-          text-xs"
-          >
-            <span className="inline-flex flex-col items-start">
-              {job.author.firstName} {job.author.lastName}
-              <span className="text-slate-400">HR at .Org</span>
-            </span>
-          </div>
-        </div>
         <CardDescription className="h-5">
           {job.shortDescription}
         </CardDescription>
@@ -56,17 +39,19 @@ export const JobItem = ({ job }: { job: JOB }) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
-          <div className="grid w-full items-center gap-4">
+        <div className="flex flex-col items-start gap-2">
+          <MAvatar author={job.author} />
+          <div className="grid w-full gap-3 items-center justify-start">
             <Type type={job.type} />
             <Category title={job.category.title} />
+            <MLocations locations={job.locations} />
             <div className="flex flex-col space-y-1.5">
               <span className="text-xs text-slate-500 font-semibold">
                 View more
               </span>
             </div>
           </div>
-        </form>
+        </div>
       </CardContent>
       <CardFooter className="flex justify-between">
         <div className="space-x-2">

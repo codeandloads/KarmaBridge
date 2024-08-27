@@ -69,6 +69,7 @@ namespace app.Extensions
                 Email = userModel.Email!,
                 FirstName = userModel.FirstName!,
                 LastName = userModel.LastName!,
+                ImageUrl = userModel.ImageUrl
             };
         }
 
