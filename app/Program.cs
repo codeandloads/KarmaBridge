@@ -1,5 +1,7 @@
 using app.Models;
 using app.Services;
+using app.Context;
+using app.Services.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +19,9 @@ builder.Services.AddControllers(config =>
 builder.Services.AddCors(options =>
       {
         options.AddPolicy("AllowSpecificOrigins",
-            builder =>
+            corsPolicyBuilder =>
             {
-              builder.WithOrigins(
+              corsPolicyBuilder.WithOrigins(
                     "http://localhost:5173"  // If you need to allow a local development server
                 )
                 .AllowAnyHeader()

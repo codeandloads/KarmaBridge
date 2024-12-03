@@ -1,6 +1,7 @@
 ﻿using app.Dto;
 using app.Models;
 using app.Services;
+using app.Services.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,7 +42,7 @@ namespace app.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> UpdateProfilePic(IFormFile file)
+    public async Task<IActionResult> UpdateProfilePic(IFormFile? file)
     {
       var response = await IUserService.UpdateProfilePic(file);
       if (response != null)

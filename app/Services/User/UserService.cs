@@ -1,42 +1,30 @@
-﻿using System.Diagnostics;
-using System.Security.Claims;
+﻿using System.Security.Claims;
+using app.Context;
 using app.Dto;
 using app.Extensions;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
-namespace app.Services
+namespace app.Services.User
 {
-    public class UserService : IUserService
+    public class UserService(
+        ApplicationDbContext context,
+        IHttpContextAccessor
+        httpContext) : IUserService
     {
-        private readonly ApplicationDbContext ApplicationDbContext;
 
-        private readonly IHttpContextAccessor httpContext;
-
-        public UserService(ApplicationDbContext context, IHttpContextAccessor
-        httpContext)
+        public ActionResult<UserDto> Info()
         {
-            ApplicationDbContext = context;
-            this.httpContext = httpContext;
-        }
-
-        public ActionResult<UserDto>? Info()
-        {
-            var USER = httpContext!.HttpContext!.User.Identity as ClaimsIdentity;
-            var UserModelId = USER!.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            var user = ApplicationDbContext.Users
-            .Where(x => x.Id == UserModelId).Select(x => new UserDto
+            var userIdentity = httpContext!.HttpContext!.User.Identity as ClaimsIdentity;
+            var userModelId = userIdentity!.FindFirst(ClaimTypes.NameIdentifier)!.Value ?? throw new ArgumentNullException("USER!.FindFirst(ClaimTypes.NameIdentifier)!.Value");
+            var user = context.Users
+            .Where(x => x.Id == userModelId).Select(x => new UserDto
             {
                 Email = x.Email!,
                 FirstName = x.FirstName!,
                 LastName = x.LastName!,
                 ImageUrl = x.ImageUrl
             }).FirstOrDefault();
-            if (user != null)
-            {
-                return user;
-            }
-            return null;
+            return (user ?? null) ?? throw new InvalidOperationException();
         }
 
         /// <summary>
@@ -56,17 +44,13 @@ namespace app.Services
             // more importantly the imageUrl. so need to deal with file upload.
             // INFO: so if there's no changes at all just return in the 
             // (old ) userDto. 
-            var USER = httpContext!.HttpContext!.User.Identity as ClaimsIdentity;
-            var UserModelId = USER!.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            var user = ApplicationDbContext.Users
-            .Where(x => x.Id == UserModelId)
+            var userIdentity = httpContext!.HttpContext!.User.Identity as ClaimsIdentity;
+            var userModelId = userIdentity!.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var user = context.Users
+            .Where(x => x.Id == userModelId)
             .Select(x => x.ToDto())
             .FirstOrDefault();
-            if (user != null)
-            {
-                return user;
-            }
-            return null;
+            return (user ?? null) ?? dto;
         }
 
         public ActionResult<UserDto> UpdateProfile()
@@ -74,7 +58,7 @@ namespace app.Services
             throw new NotImplementedException();
         }
 
-        public async Task<string> UpdateProfilePic(IFormFile file)
+        public async Task<string> UpdateProfilePic(IFormFile? file)
         {
             var USER = httpContext!.HttpContext!.User.Identity as ClaimsIdentity;
             var UserModelId = USER!.FindFirst(ClaimTypes.NameIdentifier)!.Value;
@@ -82,7 +66,6 @@ namespace app.Services
                 return "No file provided !";
 
             // TODO: get FOLDER path for a CONFIG, by injecting to controller
-            // IConfiguration
             var folderPath = Path.Combine("wwwroot", "avatars");
             if (!Directory.Exists(folderPath))
             {
@@ -98,22 +81,16 @@ namespace app.Services
             }
             catch (Exception denfex)
             {
-                if (denfex != null)
-                {
                     return denfex.Message;
-                }
             }
-            var user = ApplicationDbContext.Users
-            .Where(x => x.Id == UserModelId)
-            .FirstOrDefault();
-            if (user != null)
-            {
-                user.ImageUrl = fakeName;
-                ApplicationDbContext.Users.Update(user);
-                ApplicationDbContext.SaveChanges();
-                return "Profile pic updated !";
-            }
-            return "Something went wrong !";
+            var user = context.Users
+            .FirstOrDefault(x => x.Id == UserModelId);
+            if (user == null)
+                return "Something went wrong !";
+            user.ImageUrl = fakeName;
+            context.Users.Update(user);
+            await context.SaveChangesAsync();
+            return "Profile pic updated !";
         }
     }
 }

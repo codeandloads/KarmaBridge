@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Security.Claims;
+using app.Context;
 using app.Dto;
 using app.Models;
 using Microsoft.EntityFrameworkCore;
@@ -63,7 +64,7 @@ namespace app.Services
         {
             var TotalRows = ApplicationDbContext.jobs.Count();
             var results = ApplicationDbContext.jobs
-            .paginatedFilter(query).sortingFilter(query)
+            .PaginatedFilter(query).SortingFilter(query)
             .Include(job => job.Category)
             .Include(job => job.Locations)
             .Select(job => new JobDto

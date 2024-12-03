@@ -8,16 +8,8 @@ namespace app.Controllers
 
     [Route("[controller]/[action]")]
     [ApiController]
-    public class JobsController : ControllerBase
+    public class JobsController(IJobService jobsService) : ControllerBase
     {
-
-        private readonly IJobService jobsService;
-
-        public JobsController(IJobService jobsService)
-        {
-            this.jobsService = jobsService;
-        }
-
         [HttpGet]
         [AllowAnonymous]
         public JobsResponse<JobDto> Index([FromQuery] PaginatedQuery query)
@@ -27,9 +19,9 @@ namespace app.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult<JobDto> Get(Guid RefId)
+        public ActionResult<JobDto> Get(Guid refId)
         {
-            var job = jobsService.GetJob(RefId);
+            var job = jobsService.GetJob(refId);
             if (job == null)
             {
                 return NoContent();
@@ -39,7 +31,7 @@ namespace app.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        // INFO: Instead of a seperate / and /search route, can't I just use search route ?
+        // INFO: Instead of a separate / and /search route, can't I just use search route ?
         public ActionResult<JobsResponse<JobDto>> Search([FromQuery] JobSearchQuery jobSearchQuery)
         {
             var results = jobsService.SearchJobs(jobSearchQuery);
@@ -55,11 +47,7 @@ namespace app.Controllers
         public IActionResult Post(JobDto jobDto)
         {
             var model = jobsService.AddJob(jobDto);
-            if (model != null)
-            {
-                return CreatedAtAction(nameof(Post), model);
-            }
-            return NoContent();
+            return CreatedAtAction(nameof(Post), model);
         }
 
         [HttpPut]
