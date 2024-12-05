@@ -1,5 +1,4 @@
 import { AXIOS } from "@/axios/axios";
-import {} from "../components/MInput";
 
 export type REGISTER_FIELDS = {
   Email: string;

@@ -70,7 +70,7 @@ export function ProfileEdit() {
           <div>
             <Label htmlFor="firstname">Firstname</Label>
             <form.Field
-              name="FirstName"
+              name="firstname"
               children={(field) => (
                 <Input
                   id="firstname"

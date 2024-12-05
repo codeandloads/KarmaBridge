@@ -1,0 +1,11 @@
+type Book {
+  id: ID!
+  title: String!
+  "The title of the Books"
+  author: String!
+}
+
+type Query {
+  "A curated array of books on the homepage"
+  books: [Book!]!
+}

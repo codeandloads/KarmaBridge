@@ -19,11 +19,11 @@ export const Route = createFileRoute("/auth/register")({
 
 function Register() {
   const { toast } = useToast();
-  const [showAlert, setShowAltert] = useState<boolean>(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
   const [errors, setErrors] = useState<[string]>([""]);
   const RegisterMutation = useMutation({
     mutationFn: registerUser,
-    onSuccess: ({ data, status }: AxiosResponse<REGISTER_FIELDS>) => {
+    onSuccess: ({ status }: AxiosResponse<REGISTER_FIELDS>) => {
       if (status == 200) {
         form.reset();
         toast({
@@ -39,7 +39,7 @@ function Register() {
         const error = data.response.data?.errors;
         const errors = MErrors(error);
         setErrors(errors as [string]);
-        setShowAltert(true);
+        setShowAlert(true);
       }
     },
   });
@@ -51,7 +51,7 @@ function Register() {
     },
     validatorAdapter: zodValidator(),
     onSubmit: async ({ value }) => {
-      setShowAltert(false);
+      setShowAlert(false);
       RegisterMutation.mutate(value);
     },
   });
