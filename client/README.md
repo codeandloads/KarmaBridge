@@ -1,3 +1,0 @@
-# KarmaBridge
-
-Frontend for KarmaBridge.

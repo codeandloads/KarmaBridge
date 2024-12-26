@@ -1,0 +1,12 @@
+{
+  "name": "karmabridge",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev":"",
+    "start":"",
+    "build":""
+  }
+}
