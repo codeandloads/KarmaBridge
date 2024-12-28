@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "strict": true,
+    // "lib": ["ESNext"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/types/*": ["./@types/*"]
+    }
+  },
+    // "esModuleInterop": true,
+  "typeRoots": ["./node_modules/@types", "./@types"],
+  "include": ["src", "@types"]
+}
