@@ -4,7 +4,7 @@ import { readFileSync } from "fs";
 import { gql } from "graphql-tag";
 import path = require("path");
 import { resolvers } from "./graphql/resolvers";
-import { client } from "./config/config";
+import { client } from "./prisma.config";
 
 const typeDefs = gql(
   readFileSync(path.resolve(__dirname, "./graphql/schemas/schemas.graphql"), {

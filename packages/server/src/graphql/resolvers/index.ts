@@ -1,9 +1,7 @@
-import {findAllJobsResolverFn, findJobResolverFn} from "./jobs/job.resolver";
+import { Mutations } from "@/graphql/resolvers/mutations";
+import { Queries } from "@/graphql/resolvers/queries";
 
-// INFO: RESOLVERS
 export const resolvers = {
-  Query: {
-    jobs: findAllJobsResolverFn,
-    job: findJobResolverFn,
-  },
+  Query: Queries,
+  Mutation: Mutations,
 };

@@ -37,3 +37,13 @@ type Query {
   job(id: ID!): Job!
   user(id: ID!): User!
 }
+
+type RegistrationResponse {
+  success:Boolean
+  error:{}
+}
+
+type Mutation {
+  register(email: String!, password:String!): Boolean ||
+  login(email: String!, password:String!): User
+}

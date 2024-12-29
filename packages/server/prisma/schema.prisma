@@ -21,10 +21,11 @@ model User {
 }
 
 model Profile {
-  id       Int     @id @default(autoincrement())
-  bio      String?
-  authorId Int     @unique
-  author   User    @relation(fields: [authorId], references: [id])
+  id        Int     @id @default(autoincrement())
+  bio       String?
+  completed Boolean @default(false)
+  authorId  Int     @unique
+  author    User    @relation(fields: [authorId], references: [id])
 }
 
 model Post {
