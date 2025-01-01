@@ -1,9 +1,12 @@
 import {
-  findAllJobsResolver,
-  findJobResolver,
-} from "@/graphql/resolvers/queries/jobs/job.query";
+  allPostsQuery,
+  postQuery,
+} from "@/graphql/resolvers/queries/posts/posts.query";
+import { jobQuery } from "@/graphql/resolvers/queries/jobs/jobs.query";
 
 export const Queries = {
-  jobs: findAllJobsResolver,
-  job: findJobResolver,
+  jobs: allPostsQuery,
+  job: jobQuery,
+  posts: allPostsQuery,
+  post: postQuery,
 };

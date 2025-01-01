@@ -1,1 +1,1 @@
-﻿# INFO: To include startup scripts for convinince
+﻿# INFO: To include startup scripts for convenience
